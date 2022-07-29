@@ -1,6 +1,6 @@
 import argparse
 import os
-from src.utils import download_files, download_labels_file
+from src.core import download_files, download_labels_file
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AVA-Speech dataset downloader")
@@ -19,9 +19,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     assert args.fs in [8000, 16000, 44000]
+    os.makedirs(args.o, exist_ok=True)
 
     if args.labels_file == None:
         download_labels_file()
         labels_files_dir = os.getcwd()
     else:
         assert os.path.exists(args.labels_file)
+    
+    download_files(input_files=os.path.join(os.getcwd(), "ava_speech_labels_v1.csv"),
+                   use_multiprocessing=args.multiprocessing,
+                   output_path=args.o,
+                   fs=args.fs)

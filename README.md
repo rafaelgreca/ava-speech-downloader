@@ -87,6 +87,7 @@ ava-speech-downloader
 ├── __init__.py
 ├── LICENCE
 ├── main.py
+├── setup.py
 ├── requirements.txt
 └── README.md
 ```

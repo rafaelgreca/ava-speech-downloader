@@ -3,15 +3,14 @@ import os
 import pandas as pd
 import multiprocessing
 
+OVERWRITE_FILE = 'n' # False
+
 def download_labels_file():
     os.system("wget -c https://research.google.com/ava/download/ava_speech_labels_v1.csv -q")
 
-def create_files_csv(input_files: str):
-    pass
-
 def _aux_download_file(video_id, start_timestamp, end_timestamp, label, output_path, fs):
     youtube_dl_command = f"youtube-dl --format 'bestaudio' --get-url https://www.youtube.com/watch?v={video_id}"
-    ffmpeg_command = f"ffmpeg -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) -ar {fs} -hide_banner -v warning {output_path}/{video_id}-{start_timestamp}-{end_timestamp}-{label}.wav"
+    ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) -ar {fs} -hide_banner -v warning {output_path}/{video_id}-{start_timestamp}-{end_timestamp}-{label}.wav"
     os.system(ffmpeg_command)
 
 def download_files(df: pd.DataFrame,
@@ -19,8 +18,11 @@ def download_files(df: pd.DataFrame,
                    output_path: str,
                    fs: int,
                    max_files: Union[None, int],
-                   classes: list,
+                   classes: List,
                    overwrite: bool):
+
+    if overwrite:
+        OVERWRITE_FILE = 'y' # True
 
     if max_files != None:
         count_classes = {c:0 for c in classes}

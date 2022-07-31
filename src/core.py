@@ -30,9 +30,10 @@ def _aux_download_file(video_id: str,
     Return:
         None
     """
+    os.makedirs(f"{PATH_OUTPUT}/{video_id}", exist_ok=True)
     youtube_dl_command = f"youtube-dl --format 'bestaudio' --get-url https://www.youtube.com/watch?v={video_id}"
     ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) " + \
-                     f"-ar {FRAME_SAMPLE} -hide_banner -v warning {PATH_OUTPUT}/{video_id}-{start_timestamp}-{end_timestamp}-{label}.wav"
+                     f"-ar {FRAME_SAMPLE} -hide_banner -v warning {PATH_OUTPUT}/{label}/{video_id}-{start_timestamp}-{end_timestamp}.wav"
     os.system(ffmpeg_command)
 
 def download_files(df: pd.DataFrame,

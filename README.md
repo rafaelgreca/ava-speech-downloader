@@ -32,6 +32,7 @@ There is some optinal parameters you can use as you need:
 - `-overwrite` or `--overwrite`: Use it if you want to overwrite the files that have already beed downloaded.
 - `-c` or `--c`: The class(es) you want to download ('clean-speech', 'speech-music', 'no-speech', 'speech-noise'). You can pass just one class or more. See the examples section below to see how to use. Default: all classes will be downloaded.
 - `-max_files` or `--max_files`: The maximum files for each class that you want to download. Default: None, all files will be downloaded.
+- `-channels` or `--channels`: How many channels the output file will have. Default: 1 (Mono channel).
 
 ## Examples
 

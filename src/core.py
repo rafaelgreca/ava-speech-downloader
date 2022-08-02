@@ -33,7 +33,7 @@ def _aux_download_file(video_id: str,
     os.makedirs(f"{PATH_OUTPUT}/{video_id}", exist_ok=True)
     youtube_dl_command = f"youtube-dl --format 'bestaudio' --get-url https://www.youtube.com/watch?v={video_id}"
     ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) " + \
-                     f"-ar {FRAME_SAMPLE} -hide_banner -v warning {PATH_OUTPUT}/{label}/{video_id}-{start_timestamp}-{end_timestamp}.wav"
+                     f"-ar {FRAME_SAMPLE} -ac {CHANNELS} -hide_banner -v warning {PATH_OUTPUT}/{label}/{video_id}-{start_timestamp}-{end_timestamp}.wav"
     os.system(ffmpeg_command)
 
 def download_files(df: pd.DataFrame,
@@ -42,7 +42,8 @@ def download_files(df: pd.DataFrame,
                    fs: int,
                    max_files: Union[None, int],
                    classes: List,
-                   overwrite: bool) -> None:
+                   overwrite: bool,
+                   channels: int) -> None:
     """
     Main function responsible to download the videos.
 
@@ -54,12 +55,14 @@ def download_files(df: pd.DataFrame,
         :max_files: Max files to be downloaded for each class.
         :classes: Class(es) that will be downloaded.
         :overwrite: Overwrite or not the files (if already exists).
+        :channels: How many channels the audio output will have.
     Return:
         None
     """
     global OVERWRITE_FILE
     global FRAME_SAMPLE
     global PATH_OUTPUT
+    global CHANNELS
 
     if overwrite:
         OVERWRITE_FILE = 'y'
@@ -68,6 +71,7 @@ def download_files(df: pd.DataFrame,
     
     FRAME_SAMPLE = fs
     PATH_OUTPUT = output_path
+    CHANNELS = channels
 
     ## if max_files param isn't none, create a dictionary
     ## to keep track how many files have already been downloaded

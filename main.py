@@ -24,6 +24,7 @@ if __name__ == "__main__":
     parser.add_argument("-overwrite", "--overwrite", action="store_true", dest="overwrite", help="Overwrite existing files (bool). Default: False")
     parser.add_argument("-c", "--c", nargs="+", type=str.lower, help="Specify the classes you want to download (str). Default: all")    
     parser.add_argument("-max_files", "--max_files", type=int, help="Max files to download from each class (int). Default: None (all of them)")
+    parser.add_argument("-channels", "--channels", type=int, help="Channels audio output (int). Default: 1")
     parser.set_defaults(
         fs=16000,
         multiprocessing=False,
@@ -31,7 +32,8 @@ if __name__ == "__main__":
         o=os.path.join(os.getcwd(), "dataset"),
         labels_file=None,
         c="all",
-        max_files=None
+        max_files=None,
+        channels=1
     )
     args = parser.parse_args()
     
@@ -45,11 +47,11 @@ if __name__ == "__main__":
     }
 
     assert args.fs in available_fs, f"The fs must be {available_fs}"
-    assert all([c in all_classes for c in args.c]), f"The class(es) must be {all_classes}"
     assert ((args.max_files == None) or ((type(args.max_files) == int) and (args.max_files > 0))), f"You must provide a valid value for max_files or let it empty to download everything"
 
     ## mapping the chosen classes
     if args.c != "all":
+        assert all([c in all_classes for c in args.c]), f"The class(es) must be {all_classes}"
         all_classes = [map_classes[c] for c in args.c]
     else:
         all_classes = [map_classes[c] for c in all_classes]
@@ -81,4 +83,5 @@ if __name__ == "__main__":
                    fs=args.fs,
                    max_files=args.max_files,
                    classes=all_classes,
-                   overwrite=args.overwrite)
+                   overwrite=args.overwrite,
+                   channels=args.channels)

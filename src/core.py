@@ -31,7 +31,7 @@ def _aux_download_file(video_id: str,
         None
     """
     os.makedirs(f"{PATH_OUTPUT}/{label}", exist_ok=True)
-    youtube_dl_command = f"youtube-dl --format 'bestaudio' --get-url https://www.youtube.com/watch?v={video_id}"
+    youtube_dl_command = f"youtube-dl --format '(bestaudio/best)[protocol^=http]' --get-url https://www.youtube.com/watch?v={video_id} --no-cache-dir"
     ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) " + \
                      f"-ar {FRAME_SAMPLE} -ac {CHANNELS} -hide_banner -v warning {PATH_OUTPUT}/{label}/{video_id}-{start_timestamp}-{end_timestamp}.wav"
     os.system(ffmpeg_command)

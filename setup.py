@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 with open("README.md") as f:
     readme = f.read()
 
-with open('LICENSE') as f:
+with open("LICENSE") as f:
     license = f.read()
 
 setup(
@@ -17,14 +17,9 @@ setup(
     packages=find_packages(),
     license=license,
     classifiers=[
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.8.10'
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.8.10",
     ],
-    python_requires='>=3.8.10',
-    install_requires=[
-        'wheel',
-        'pandas',
-        'youtube-dl',
-        'ffmpeg'
-    ],
+    python_requires=">=3.8.10",
+    install_requires=["wheel", "pandas", "youtube-dl", "ffmpeg"],
 )

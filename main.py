@@ -76,6 +76,21 @@ if __name__ == "__main__":
     df = pd.read_csv(labels_files_dir, sep=",", header=None)
     df = df[df[3].isin(all_classes)]
     
+    file_names_df = pd.DataFrame()
+    
+    with open("ava_speech_file_names_v1.txt", "r") as f:
+        lines = f.readlines()
+        
+        for line in lines:
+            file_name, extension = line.replace("\n", "").split(".")
+            file_names_df = pd.concat([file_names_df,
+                                      pd.DataFrame({"file_name": [file_name],
+                                                    "extension": [extension]})],
+                                      axis=0)
+    
+    df = df.merge(file_names_df, how="inner", left_on=0, right_on="file_name")
+    df = df.drop(columns=["file_name"])
+    
     ## download the files
     download_files(df=df,
                    use_multiprocessing=args.multiprocessing,

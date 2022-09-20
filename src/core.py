@@ -18,7 +18,8 @@ def download_labels_file() -> None:
 def _aux_download_file(video_id: str,
                        start_timestamp: float,
                        end_timestamp: float,
-                       label: str) -> None:
+                       label: str,
+                       video_extension: str) -> None:
     """
     Auxiliar function to download the videos.
 
@@ -31,8 +32,8 @@ def _aux_download_file(video_id: str,
         None
     """
     os.makedirs(f"{PATH_OUTPUT}/{label}", exist_ok=True)
-    youtube_dl_command = f"youtube-dl --format '(bestaudio/best)[protocol^=http]' --get-url https://www.youtube.com/watch?v={video_id} --no-cache-dir"
-    ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i $({youtube_dl_command}) " + \
+    download_command = f"https://s3.amazonaws.com/ava-dataset/trainval/{video_id}.{video_extension}" # all credits to https://github.com/cvdfoundation/ava-dataset
+    ffmpeg_command = f"ffmpeg -{OVERWRITE_FILE} -ss {start_timestamp} -to {end_timestamp} -i {download_command} " + \
                      f"-ar {FRAME_SAMPLE} -ac {CHANNELS} -hide_banner -v warning {PATH_OUTPUT}/{label}/{video_id}-{start_timestamp}-{end_timestamp}.wav"
     os.system(ffmpeg_command)
 
@@ -87,7 +88,8 @@ def download_files(df: pd.DataFrame,
         # d[1] = start timestamp
         # d[2] = end timestamp
         # d[3] = label
-        for i, infos in enumerate(zip(df[0], df[1], df[2], df[3])):
+        # d[extension] = video's extension
+        for i, infos in enumerate(zip(df[0], df[1], df[2], df[3], df["extension"])):
 
             if max_files != None:
                 ## check if we have passed the max files amount for that class
